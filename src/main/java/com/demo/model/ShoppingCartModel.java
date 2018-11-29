@@ -23,7 +23,7 @@ public class ShoppingCartModel {
 		for(int i = 0; i < items.size(); i++) {
 			if(items.get(i).getId().equals(item.getId())) {
 				updatedItem = items.get(i);
-				updatedItem.setQuantity(updatedItem.getQuantity() + 1);
+				updatedItem.setQuantity(updatedItem.getQuantity() + item.getQuantity());
 				updatedItem.setTotal(updatedItem.getQuantity() * updatedItem.getPrice());
 				items.set(i, updatedItem);
 				isAdded = true;
@@ -33,22 +33,32 @@ public class ShoppingCartModel {
 		if(!isAdded) {
 			items.add(item);
 		}
-		totalItems += 1;
-		grandTotal += item.getPrice();		
+		totalItems += item.getQuantity();
+		grandTotal += item.getTotal();		
 	}
 
-	public void removeItem(String itemId) {
+	public void removeItem(String itemId, int quantity) {
 		ItemModel removedItem = null;
 		for(int i = 0; i < items.size(); i++) {
 			if(items.get(i).getId().equals(itemId)) {
 				removedItem = items.get(i);
-				items.remove(i);
+				removedItem.setQuantity(removedItem.getQuantity() - quantity);
+				removedItem.setTotal(removedItem.getQuantity() * removedItem.getPrice());
+				if(removedItem.getQuantity() <= 0) {
+					items.remove(i);
+				} else {
+					items.set(i, removedItem);
+				}
 				break;
 			}
 		}
 		if(removedItem != null) {
-			totalItems -= removedItem.getQuantity();
-			grandTotal -= removedItem.getQuantity() * removedItem.getPrice();
+		this.grandTotal = 0;
+		this.totalItems = 0;
+			for(int i = 0; i < items.size(); i++) {
+				this.grandTotal += items.get(i).getTotal();
+				this.totalItems += items.get(i).getQuantity();
+			}
 		}
 	}
 

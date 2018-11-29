@@ -3,6 +3,24 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
+	<filter>
+		<filter-name>ShoppingCartFilter</filter-name>
+		<filter-class>com.demo.filter.ShoppingCartFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ShoppingCartFilter</filter-name>
+		<url-pattern>/cartView.jsp</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>AddProductController</servlet-name>
+		<display-name>AddProductController</display-name>
+		<description></description>
+		<servlet-class>com.demo.controller.AddProductController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddProductController</servlet-name>
+		<url-pattern>/AddProductController</url-pattern>
+	</servlet-mapping>
  <session-config>
  <session-timeout>30</session-timeout>
  </session-config>

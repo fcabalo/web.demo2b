@@ -48,6 +48,27 @@ public class ToyDAO {
 
 		return products;
 	}
+	
+	public boolean addToy(ProductModel product) {
+		String id = product.getId(); 
+		String name = product.getName(); 
+		String desc = product.getDesc();
+		int price = product.getPrice();
+		boolean success = false;
+		try {
+			final Connection conn = getConnection();
+			String statement = "INSERT INTO toysdetails VALUES(?,?,?,?)";
+			PreparedStatement insertToySql = conn.prepareStatement(statement);
+			insertToySql.setString(1, id);
+			insertToySql.setString(2, name);
+			insertToySql.setString(3, desc);
+			insertToySql.setInt(4, price);
+			success =  insertToySql.execute(); 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
 
 	private void loadDriver() {
 		try {

@@ -3,7 +3,6 @@
 <%@page import="com.demo.model.ShoppingCartModel"%>
 <%@page import="com.demo.model.ProductModel"%>
 <%@page import="java.util.List"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" isELIgnored="false"%>
 <html>
 <head>
@@ -27,26 +26,31 @@
 	       <th>Total</th>
 	       <th>Action</th>
 	   </tr>
-	   <c:forEach items="${shoppingCart.items}" var="item">
-	   <tr>
-	           <td><c:out value="${item.id}"/></td>
-	           <td><c:out value="${item.name}"/></td>
-	           <td><c:out value="${item.desc}"/></td>
-	           <td><c:out value="${item.price}"/></td>
-	           <td><c:out value="${item.quantity}"/></td>
-	           <td><c:out value="${item.total}"/></td>
+	   <%
+	    ShoppingCartModel sc = (ShoppingCartModel)session.getAttribute("shoppingCart");
+	    List<ItemModel> items = sc.getItems();
+	    for(ItemModel item: items) {
+	   %>
+	        <tr>
+	           <td><%= item.getId() %></td>
+	           <td><%= item.getName() %></td>
+	           <td><%= item.getDesc() %></td>
+	           <td><%= item.getPrice() %></td>
+	           <td><%= item.getQuantity() %></td>
+	           <td><%= item.getTotal() %></td>
 	           <td>
 	           		<form action="./shopping-cart" method="GET">
-	           			<input type="hidden" name="pid" value="${item.id}">
-	           			<input type="text" name="quantity">
+	           			<input type="hidden" name="pid" value="<%= item.getId() %>">
 	           			<input type="hidden" name="action" value="remove">
 	           			<input type="submit" value="Remove to cart">
 	           		</form>
 	           </td>
 	       </tr>
-	   </c:forEach>
+	   <%
+	    }
+	   %>
 	</table>
-	<h4>Total Items: <c:out value="${shoppingCart.totalItems}"/></h4>
-	<h4>Grand Total: <c:out value="${shoppingCart.grandTotal}"/></h4>
+	<h4>Total Items: <%= sc.getTotalItems() %></h4>
+	<h4>Grand Total: <%= sc.getGrandTotal() %></h4>
 </body>
 </html>

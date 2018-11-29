@@ -32,22 +32,33 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         	action = "";
         }
         if(action.equals("add")) {
-	        String pid = request.getParameter("pid");
-	        String name = request.getParameter("name");
-	        String desc = request.getParameter("desc");
-	        String price = request.getParameter("price");
-	        int iPrice = Integer.parseInt(price);
+	        final String pid = request.getParameter("pid");
+	        final String name = request.getParameter("name");
+	        final String desc = request.getParameter("desc");
+	        final String price = request.getParameter("price");
+	        final String quantity = request.getParameter("quantity");
+	        final int iPrice = Integer.parseInt(price);
+	        final int iQuantity = Integer.parseInt(quantity);
 	        
-	        ItemModel addedItem = new ItemModel(pid, name, desc, iPrice, 1, iPrice);
+	        ItemModel addedItem = new ItemModel(pid, name, desc, iPrice, iQuantity, iPrice*iQuantity);
 	        shoppingCart.addItem(addedItem);
         } else if(action.equals("remove")){
-        	String pid = request.getParameter("pid");
-        	shoppingCart.removeItem(pid);
+        	final String pid = request.getParameter("pid");
+        	final String quantity = request.getParameter("quantity");
+        	final int iQuantity = Integer.parseInt(quantity);
+        	
+        	shoppingCart.removeItem(pid, iQuantity);
         } 
 
         session.setAttribute("shoppingCart", shoppingCart);
 
-        final RequestDispatcher dispatcher = request.getRequestDispatcher("/cartView.jsp");
+        RequestDispatcher dispatcher = null;
+        if(shoppingCart.getItems().size() <= 0)
+        {
+        	dispatcher = request.getRequestDispatcher("/catalogView.jsp");	
+        } else {
+        	dispatcher = request.getRequestDispatcher("/cartView.jsp");
+        }
         dispatcher.forward(request, response);
     }
 }
